@@ -110,5 +110,5 @@ module.exports = (function () {
     return createProxy();
   };
 
-  return { create : create };
+  return create;
 }());

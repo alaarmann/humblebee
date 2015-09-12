@@ -11,7 +11,7 @@
 */
 /*global require, exports */
 
-var fsm = require('../main');
+var createFsm = require('../main');
 
 var createFsmSpecification = function () {
   var unlock = function () {
@@ -60,9 +60,9 @@ var createFsmSpecification = function () {
   return turnstyleFsmSpecification;
 };
 
-exports['createFSM'] = function (test) {
+exports['createFsm'] = function (test) {
   var turnstyleFsmSpecification = createFsmSpecification();
-  var turnstyleState = fsm.create(turnstyleFsmSpecification);
+  var turnstyleState = createFsm(turnstyleFsmSpecification);
   var initialStateId = 'Locked';
   test.equal(turnstyleState.getId(), initialStateId, 'Initial state is ' + initialStateId);
   test.done();
@@ -70,7 +70,7 @@ exports['createFSM'] = function (test) {
 
 exports['statesAndTransitions'] = function (test) {
   var turnstyleFsmSpecification = createFsmSpecification();
-  var turnstyleState = fsm.create(turnstyleFsmSpecification);
+  var turnstyleState = createFsm(turnstyleFsmSpecification);
   test.equal(turnstyleState.getId(), 'Locked');
   turnstyleState.onPass();
   test.equal(turnstyleState.getId(), 'Locked');
@@ -87,7 +87,7 @@ exports['statesAndTransitions'] = function (test) {
 
 exports['modifySpecAfter'] = function (test) {
   var turnstyleFsmSpecification = createFsmSpecification();
-  var turnstyleState = fsm.create(turnstyleFsmSpecification);
+  var turnstyleState = createFsm(turnstyleFsmSpecification);
 
   // modification after creation must not have any influence on fsm
   turnstyleFsmSpecification.states.Locked = {};
