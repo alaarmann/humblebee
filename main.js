@@ -47,7 +47,7 @@ module.exports = (function () {
     var createEventHandler = function (action, nextStateId){
       return function (){
         // action
-        var result = action();
+        var result = action.apply(this, arguments);
         // transition
         if (nextStateId) {
           fsm.currentState = fsm[nextStateId];
@@ -59,7 +59,7 @@ module.exports = (function () {
     var createEventDelegation = function (eventid){
       console.log('createEventDelegation, eventid=' + eventid);
       return function (){
-        return typeof fsm.currentState[eventid] === 'function' ? fsm.currentState[eventid]() : (function () {console.log('No operation');})();
+        return typeof fsm.currentState[eventid] === 'function' ? fsm.currentState[eventid].apply(this, arguments) : (function () {console.log('No operation');})();
       };
     };
 

@@ -107,3 +107,27 @@ exports['modifySpecAfter'] = function (test) {
 
   test.done();
 };
+
+exports['passThroughArguments'] = function (test) {
+  var turnstyleFsmSpecification = createFsmSpecification();
+
+  var alarm = function () {
+    test.equal(arguments.length, 2);
+    test.equal(arguments[0], 'hastily');
+    test.equal(arguments[1], 'climbing');
+    console.log('alarm(): someone is ' + arguments[0] + ' ' + arguments[1] + ' to pass through');
+  };
+
+  turnstyleFsmSpecification['states']['Locked']['events']['passThrough']['action'] = alarm;
+
+  var turnstyleState = createFsm(turnstyleFsmSpecification);
+  test.equal(turnstyleState.getId(), 'Locked');
+  turnstyleState.passThrough('hastily', 'climbing');
+  test.equal(turnstyleState.getId(), 'Locked');
+  turnstyleState.insertCoin(203, 'Euro');
+  test.equal(turnstyleState.getId(), 'Unlocked');
+
+
+  test.done();
+};
+
