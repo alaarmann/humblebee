@@ -37,10 +37,6 @@ module.exports = (function () {
     return result;
   };
 
-  var createEventHandlerName = function(eventName){
-    return 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
-  };
-
   var create = function ( aSpecification ) {
     var stateIds = [];
     var fsm = {};
@@ -76,7 +72,7 @@ module.exports = (function () {
 
       for (var each in allEventIds) {
         if (allEventIds.hasOwnProperty(each)) {
-          var handlerName = createEventHandlerName(each);
+          var handlerName = each;
           result[handlerName] = createEventDelegation(handlerName); 
         }
       }
@@ -98,8 +94,8 @@ module.exports = (function () {
       for (var u=0 ;u < eventIds.length;u++){
         eachEvent = eventIds[u];
         console.log ('eachEvent=' + eachEvent);
-        console.log ('EventHandlerName=' + createEventHandlerName(eachEvent));
-        fsm[eachState][createEventHandlerName(eachEvent)] = createEventHandler (specification['states'][eachState]['events'][eachEvent]['action'], 
+        console.log ('EventHandlerName=' + eachEvent);
+        fsm[eachState][eachEvent] = createEventHandler (specification['states'][eachState]['events'][eachEvent]['action'], 
                                                                                 specification['states'][eachState]['events'][eachEvent]['transition']);
 	allEventIds[eachEvent] = 1; 
       }
