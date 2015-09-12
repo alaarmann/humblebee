@@ -2,9 +2,9 @@
   "name": "humblebee",
   "version": "0.0.0",
   "description": "A general purpose FiniteStateMachine - industrious as a bee",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt nodeunit"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,11 @@
     "url": "https://github.com/alaarmann/humblebee/issues"
   },
   "homepage": "https://github.com/alaarmann/humblebee",
-  "license" : "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-nodeunit": "^0.4.1"
+  }
 }
