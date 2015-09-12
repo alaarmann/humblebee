@@ -5,10 +5,11 @@ A general purpose FiniteStateMachine - industrious as a bee.
 
 ## Installation
 
-  npm install humblebee --save
+  `npm install humblebee --save`
 
 ## Usage
 
+```javascript
   var createHumblebeeFsm = require('humblebee');
 
   var unlock = function () {
@@ -52,11 +53,11 @@ A general purpose FiniteStateMachine - industrious as a bee.
   console.log('State is still Unlocked.');
   turnstyleFsm.passThrough();
   console.log('State is now Locked again.');
-
+```
 
 ## Tests
 
-  npm test
+  `npm test`
 
 
 ## License
