@@ -96,15 +96,17 @@ module.exports = (function () {
         allEventIds[eventId] = 1; 
       };
       fsm[stateId] = { id : stateId};
-      if (state.initial){
-        initialStateId = stateId;
+      if (state.initial && typeof fsm.currentState === 'undefined'){
+        fsm.currentState = fsm[stateId];
       }
       createCollection(state['events']).forEachEntry(processEventSpec);
     };
     createCollection(specification.states).forEachEntry(processStateSpec);
 
     // initial state
-    fsm.currentState = initialStateId ? fsm[initialStateId] : stateIds[0];
+    if (typeof fsm.currentState === 'undefined'){
+      fsm.currentState = initialStateId ? fsm[initialStateId] : stateIds[0];
+    }
     return createProxy();
   };
 
