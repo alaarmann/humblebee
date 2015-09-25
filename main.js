@@ -26,17 +26,6 @@ module.exports = (function () {
     return result;
   };
 
-//  var retrieveEventIds = function(spec){
-//    var result = [];
-//    var eventId;
-//    for (eventId in spec.events){
-//      if (spec.events.hasOwnProperty(eventId)){
-//        result.push(eventId);
-//      }
-//    }
-//    return result;
-//  };
-
   var create = function ( aSpecification ) {
     var stateIds = [];
     var fsm = {};
@@ -113,16 +102,6 @@ module.exports = (function () {
         initialStateId = eachState;
       }
       createCollection(specification.states[eachState]['events']).forEachEntry(processEvent);
-//      var eventIds = retrieveEventIds (specification.states[eachState]);
-//      var eachEvent;
-//      for (var u=0 ;u < eventIds.length;u++){
-//        eachEvent = eventIds[u];
-//        console.log ('eachEvent=' + eachEvent);
-//        console.log ('EventHandlerName=' + eachEvent);
-//        fsm[eachState][eachEvent] = createEventHandler (specification['states'][eachState]['events'][eachEvent]['action'], 
-//                                                                                specification['states'][eachState]['events'][eachEvent]['transition']);
-//	allEventIds[eachEvent] = 1; 
-//      }
     }
 
     // initial state
