@@ -26,16 +26,16 @@ module.exports = (function () {
     return result;
   };
 
-  var retrieveEventIds = function(spec){
-    var result = [];
-    var eventId;
-    for (eventId in spec.events){
-      if (spec.events.hasOwnProperty(eventId)){
-        result.push(eventId);
-      }
-    }
-    return result;
-  };
+//  var retrieveEventIds = function(spec){
+//    var result = [];
+//    var eventId;
+//    for (eventId in spec.events){
+//      if (spec.events.hasOwnProperty(eventId)){
+//        result.push(eventId);
+//      }
+//    }
+//    return result;
+//  };
 
   var create = function ( aSpecification ) {
     var stateIds = [];
@@ -79,9 +79,32 @@ module.exports = (function () {
       return result;
     };
 
+    var createCollection = function (plainObject){
+      var result = {};
+
+      result.forEachEntry = function (functionArg, thisArg) {
+        var thisToUse = typeof thisArg !== 'undefined' ? thisArg : this ;
+        var each ;
+
+        for (each in plainObject) {
+          if (!plainObject.hasOwnProperty(each)) {
+            continue;
+          }
+	  functionArg.apply(thisToUse, [each, plainObject[each]]);
+        }
+        return result;
+      };
+
+      return result;
+    };
+
     stateIds = retrieveStateIds (specification);
     var eachState;
     var initialStateId;
+    var processEvent = function(eventId, event){
+      fsm[eachState][eventId] = createEventHandler(event['action'], event['transition']);        
+      allEventIds[eventId] = 1; 
+    };
     for (var i=0; i < stateIds.length;i++){
       eachState = stateIds[i];
       console.log ('eachState=' + eachState);
@@ -89,16 +112,17 @@ module.exports = (function () {
       if (specification.states[eachState].initial){
         initialStateId = eachState;
       }
-      var eventIds = retrieveEventIds (specification.states[eachState]);
-      var eachEvent;
-      for (var u=0 ;u < eventIds.length;u++){
-        eachEvent = eventIds[u];
-        console.log ('eachEvent=' + eachEvent);
-        console.log ('EventHandlerName=' + eachEvent);
-        fsm[eachState][eachEvent] = createEventHandler (specification['states'][eachState]['events'][eachEvent]['action'], 
-                                                                                specification['states'][eachState]['events'][eachEvent]['transition']);
-	allEventIds[eachEvent] = 1; 
-      }
+      createCollection(specification.states[eachState]['events']).forEachEntry(processEvent);
+//      var eventIds = retrieveEventIds (specification.states[eachState]);
+//      var eachEvent;
+//      for (var u=0 ;u < eventIds.length;u++){
+//        eachEvent = eventIds[u];
+//        console.log ('eachEvent=' + eachEvent);
+//        console.log ('EventHandlerName=' + eachEvent);
+//        fsm[eachState][eachEvent] = createEventHandler (specification['states'][eachState]['events'][eachEvent]['action'], 
+//                                                                                specification['states'][eachState]['events'][eachEvent]['transition']);
+//	allEventIds[eachEvent] = 1; 
+//      }
     }
 
     // initial state
