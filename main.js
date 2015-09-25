@@ -14,7 +14,6 @@
 module.exports = (function () {
   'use strict';
 
-  var allEventIds = {};
   var create = function ( aSpecification ) {
     var fsm = {};
     var specification = aSpecification;
@@ -47,17 +46,43 @@ module.exports = (function () {
         return fsm.currentState.id;
       };
 
-      for (var each in allEventIds) {
-        if (allEventIds.hasOwnProperty(each)) {
-          var handlerName = each;
-          result[handlerName] = createEventDelegation(handlerName); 
-        }
-      }
+      createCollection(specification.states).forEach(function(state){
+
+          createCollection(state['events']).forEachKey(function(eventId){
+            result[eventId] = createEventDelegation(eventId);
+          });
+       });
       return result;
     };
 
     var createCollection = function (plainObject){
       var result = {};
+
+      result.forEach = function (functionArg, thisArg) {
+        var thisToUse = typeof thisArg !== 'undefined' ? thisArg : this ;
+        var each ;
+
+        for (each in plainObject) {
+          if (!plainObject.hasOwnProperty(each)) {
+            continue;
+          }
+	  functionArg.apply(thisToUse, [plainObject[each]]);
+        }
+        return result;
+      };
+
+      result.forEachKey = function (functionArg, thisArg) {
+        var thisToUse = typeof thisArg !== 'undefined' ? thisArg : this ;
+        var each ;
+
+        for (each in plainObject) {
+          if (!plainObject.hasOwnProperty(each)) {
+            continue;
+          }
+	  functionArg.apply(thisToUse, [each]);
+        }
+        return result;
+      };
 
       result.forEachEntry = function (functionArg, thisArg) {
         var thisToUse = typeof thisArg !== 'undefined' ? thisArg : this ;
@@ -92,7 +117,6 @@ module.exports = (function () {
     var processStateSpec = function(stateId, state){
       var processEventSpec = function(eventId, event){
         fsm[stateId][eventId] = createEventHandler(event['action'], event['transition']);        
-        allEventIds[eventId] = 1; 
       };
       fsm[stateId] = { id : stateId};
       if (state.initial && typeof fsm.currentState === 'undefined'){
