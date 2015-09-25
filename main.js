@@ -88,21 +88,20 @@ module.exports = (function () {
     };
 
     stateIds = retrieveStateIds (specification);
-    var eachState;
+
     var initialStateId;
-    var processEvent = function(eventId, event){
-      fsm[eachState][eventId] = createEventHandler(event['action'], event['transition']);        
-      allEventIds[eventId] = 1; 
-    };
-    for (var i=0; i < stateIds.length;i++){
-      eachState = stateIds[i];
-      console.log ('eachState=' + eachState);
-      fsm[eachState] = { id : eachState};
-      if (specification.states[eachState].initial){
-        initialStateId = eachState;
+    var processStateSpec = function(stateId, state){
+      var processEventSpec = function(eventId, event){
+        fsm[stateId][eventId] = createEventHandler(event['action'], event['transition']);        
+        allEventIds[eventId] = 1; 
+      };
+      fsm[stateId] = { id : stateId};
+      if (state.initial){
+        initialStateId = stateId;
       }
-      createCollection(specification.states[eachState]['events']).forEachEntry(processEvent);
-    }
+      createCollection(state['events']).forEachEntry(processEventSpec);
+    };
+    createCollection(specification.states).forEachEntry(processStateSpec);
 
     // initial state
     fsm.currentState = initialStateId ? fsm[initialStateId] : stateIds[0];
