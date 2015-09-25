@@ -89,7 +89,6 @@ module.exports = (function () {
 
     stateIds = retrieveStateIds (specification);
 
-    var initialStateId;
     var processStateSpec = function(stateId, state){
       var processEventSpec = function(eventId, event){
         fsm[stateId][eventId] = createEventHandler(event['action'], event['transition']);        
@@ -103,9 +102,9 @@ module.exports = (function () {
     };
     createCollection(specification.states).forEachEntry(processStateSpec);
 
-    // initial state
+    // default initial state
     if (typeof fsm.currentState === 'undefined'){
-      fsm.currentState = initialStateId ? fsm[initialStateId] : stateIds[0];
+      fsm.currentState = stateIds[0];
     }
     return createProxy();
   };
