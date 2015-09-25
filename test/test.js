@@ -85,6 +85,60 @@ exports['statesAndTransitions'] = function (test) {
   test.done();
 };
 
+exports['actions'] = function (test) {
+  var turnstyleFsmSpecification = createFsmSpecification();
+  var isUnlockCalled ;
+  var isAlarmCalled ;
+  var isThankYouCalled ;
+  var isLockCalled ;
+  var resetIndicators = function () {
+    isUnlockCalled = false;
+    isAlarmCalled = false;
+    isThankYouCalled = false;
+    isLockCalled = false;
+  };
+
+  var unlock = function () {
+    isUnlockCalled = true ;
+  };
+  var alarm = function () {
+    isAlarmCalled = true ;
+  };
+  var thankYou = function () {
+    isThankYouCalled = true ;
+  };
+  var lock = function () {
+    isLockCalled = true ;
+  };
+
+  turnstyleFsmSpecification['states']['Locked']['events']['insertCoin']['action'] = unlock;
+  turnstyleFsmSpecification['states']['Locked']['events']['passThrough']['action'] = alarm;
+  turnstyleFsmSpecification['states']['Unlocked']['events']['insertCoin']['action'] = thankYou;
+  turnstyleFsmSpecification['states']['Unlocked']['events']['passThrough']['action'] = lock;
+
+  var turnstyleState = createFsm(turnstyleFsmSpecification);
+
+  test.expect(4);
+
+  resetIndicators();
+  turnstyleState.passThrough();
+  test.ok(isAlarmCalled && !(isUnlockCalled || isThankYouCalled || isLockCalled));
+
+  resetIndicators();
+  turnstyleState.insertCoin();
+  test.ok(isUnlockCalled && !(isAlarmCalled || isThankYouCalled || isLockCalled));
+
+  resetIndicators();
+  turnstyleState.insertCoin();
+  test.ok(isThankYouCalled && !(isAlarmCalled || isUnlockCalled || isLockCalled));
+
+  resetIndicators();
+  turnstyleState.passThrough();
+  test.ok(isLockCalled && !(isAlarmCalled || isUnlockCalled || isThankYouCalled));
+
+  test.done();
+};
+
 exports['modifySpecAfter'] = function (test) {
   var turnstyleFsmSpecification = createFsmSpecification();
   var turnstyleState = createFsm(turnstyleFsmSpecification);
