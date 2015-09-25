@@ -64,22 +64,22 @@ exports['createFsm'] = function (test) {
   var turnstyleFsmSpecification = createFsmSpecification();
   var turnstyleState = createFsm(turnstyleFsmSpecification);
   var initialStateId = 'Locked';
-  test.equal(turnstyleState.getId(), initialStateId, 'Initial state is ' + initialStateId);
+  test.equal(turnstyleState.getCurrentState(), initialStateId, 'Initial state is ' + initialStateId);
   test.done();
 };
 
 exports['statesAndTransitions'] = function (test) {
   var turnstyleFsmSpecification = createFsmSpecification();
   var turnstyleState = createFsm(turnstyleFsmSpecification);
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
   turnstyleState.passThrough();
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
   turnstyleState.insertCoin();
-  test.equal(turnstyleState.getId(), 'Unlocked');
+  test.equal(turnstyleState.getCurrentState(), 'Unlocked');
   turnstyleState.insertCoin();
-  test.equal(turnstyleState.getId(), 'Unlocked');
+  test.equal(turnstyleState.getCurrentState(), 'Unlocked');
   turnstyleState.passThrough();
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
 
 
   test.done();
@@ -148,15 +148,15 @@ exports['modifySpecAfter'] = function (test) {
   turnstyleFsmSpecification.states.Unlocked = {};
 
 
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
   turnstyleState.passThrough();
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
   turnstyleState.insertCoin();
-  test.equal(turnstyleState.getId(), 'Unlocked');
+  test.equal(turnstyleState.getCurrentState(), 'Unlocked');
   turnstyleState.insertCoin();
-  test.equal(turnstyleState.getId(), 'Unlocked');
+  test.equal(turnstyleState.getCurrentState(), 'Unlocked');
   turnstyleState.passThrough();
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
 
 
   test.done();
@@ -175,11 +175,11 @@ exports['passThroughArguments'] = function (test) {
   turnstyleFsmSpecification['states']['Locked']['events']['passThrough']['action'] = alarm;
 
   var turnstyleState = createFsm(turnstyleFsmSpecification);
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
   turnstyleState.passThrough('hastily', 'climbing');
-  test.equal(turnstyleState.getId(), 'Locked');
+  test.equal(turnstyleState.getCurrentState(), 'Locked');
   turnstyleState.insertCoin(203, 'Euro');
-  test.equal(turnstyleState.getId(), 'Unlocked');
+  test.equal(turnstyleState.getCurrentState(), 'Unlocked');
 
 
   test.done();

@@ -66,7 +66,7 @@ module.exports = (function () {
     var createProxy = function (){
       var result = {};
 
-      result.getId = function () {
+      result.getCurrentState = function () {
         return fsm.currentState.id;
       };
 
