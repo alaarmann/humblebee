@@ -15,19 +15,7 @@ module.exports = (function () {
   'use strict';
 
   var allEventIds = {};
-  var retrieveStateIds = function(spec){
-    var result = [];
-    var stateId;
-    for (stateId in spec.states){
-      if (spec.states.hasOwnProperty(stateId)){
-        result.push(stateId);
-      }
-    }
-    return result;
-  };
-
   var create = function ( aSpecification ) {
-    var stateIds = [];
     var fsm = {};
     var specification = aSpecification;
     console.log ('create() called');
@@ -84,10 +72,22 @@ module.exports = (function () {
         return result;
       };
 
+      result.forFirstValue = function (functionArg, thisArg) {
+        var thisToUse = typeof thisArg !== 'undefined' ? thisArg : this ;
+        var each ;
+
+        for (each in plainObject) {
+          if (!plainObject.hasOwnProperty(each)) {
+            continue;
+          }
+	  functionArg.apply(thisToUse, [plainObject[each]]);
+          break;
+        }
+        return result;
+      };
+
       return result;
     };
-
-    stateIds = retrieveStateIds (specification);
 
     var processStateSpec = function(stateId, state){
       var processEventSpec = function(eventId, event){
@@ -104,7 +104,9 @@ module.exports = (function () {
 
     // default initial state
     if (typeof fsm.currentState === 'undefined'){
-      fsm.currentState = stateIds[0];
+      createCollection(specification.states).forFirstValue(function(state){
+        fsm.currentState = state;
+      });
     }
     return createProxy();
   };
