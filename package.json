@@ -1,6 +1,6 @@
 {
   "name": "humblebee",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A general purpose FiniteStateMachine - industrious as a bee",
   "main": "main.js",
   "scripts": {
